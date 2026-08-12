@@ -1,0 +1,120 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap'); */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+h1, h2, h3, h4 {
+  font-family: 'Outfit', sans-serif;
+}
+
+:root {
+  --bg: #07070f;
+  --surface: rgba(255,255,jj255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --accent: #6c63ff;
+  --accent2: #ff6584;
+  --green: #00e5a0;
+  --text: #f0f0f8;
+  --muted: rgba(240,240,248,0.45);
+  --border: rgba(255,255,255,0.08);
+  --glass: rgba(255,255,255,0.05);
+  --glass-border: rgba(255,255,255,0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Syne', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+
+input, textarea, select {
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ── Shared Buttons ── */
+.btn-primary {
+  background: var(--accent);
+  color: rgb(174, 5, 38);
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(108,99,255,0.3);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-primary:hover {
+  background: #5a52e0;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(108,99,255,0.45);
+}
+
+.btn-outline {
+  background: rgba(255,255,255,0.05);
+  color: var(--accent);
+  border: 1.5px solid rgba(108,99,255,0.35);
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  backdrop-filter: blur(8px);
+}
+.btn-outline:hover {
+  background: rgba(237, 10, 22, 0.1);
+  border-color: var(--accent);
+}
+
+/* ── Shared Card ── */
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ── Tags ── */
+.tag {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.tag-green  { background: rgba(0,229,160,0.1);   color: var(--green);  border: 1px solid rgba(0,229,160,0.2); }
+.tag-purple { background: rgba(108,99,255,0.1);  color: #a09aff;       border: 1px solid rgba(108,99,255,0.2); }
+.tag-red    { background: rgba(255,101,132,0.1); color: var(--accent2);border: 1px solid rgba(255,101,132,0.2); }
+.tag-gray   { background: rgba(255,255,255,0.05);color: var(--muted);  border: 1px solid rgba(255,255,255,0.08); }
+
+/* ── sub-text utility ── */
+.sub-text {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 4px;
+  font-weight: 300;
+}

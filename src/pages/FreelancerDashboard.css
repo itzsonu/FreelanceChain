@@ -1,0 +1,43 @@
+/* FreelancerDashboard-specific styles — inherits Dashboard.css */
+
+.sidebar-trust {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin: 8px 0;
+}
+
+.trust-label-row {
+  display: flex; justify-content: space-between;
+  font-size: 13px; margin-bottom: 8px; font-weight: 500;
+}
+
+.trust-hint {
+  font-size: 11px; color: rgba(240,240,248,0.35);
+  margin-top: 6px; line-height: 1.5; font-weight: 300;
+}
+
+/* Project Cards */
+.project-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px; padding: 22px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: transform 0.2s, border-color 0.2s;
+  backdrop-filter: blur(12px);
+}
+.project-card:hover { transform: translateY(-3px); border-color: rgba(108,99,255,0.25); }
+
+.pc-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.pc-title { font-weight: 500; font-size: 15px; flex: 1; margin-right: 8px; }
+.pc-client { font-size: 13px; color: rgba(240,240,248,0.4); font-weight: 300; }
+.pc-meta-row { display: flex; gap: 16px; font-size: 13px; color: rgba(240,240,248,0.4); }
+.pc-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+
+.skill-tag {
+  background: rgba(108,99,255,0.1);
+  color: #a09aff;
+  border: 1px solid rgba(108,99,255,0.2);
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 12px; font-weight: 500;
+}
