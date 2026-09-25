@@ -9,6 +9,10 @@ export default function ClientDashboard() {
 
   const [projects, setProjects] = useState([]);
 
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const [applications, setApplications] = useState([]);
+
   const [newProject, setNewProject] = useState({
     title: "",
     budget: "",
@@ -87,6 +91,66 @@ export default function ClientDashboard() {
     } catch (error) {
       console.log(error);
       alert("Error creating project");
+    }
+  };
+
+  const fetchApplications = async (project) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/applications/project/${project._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
+
+      setSelectedProject(project);
+      setApplications(data);
+    } catch (error) {
+      console.log(error);
+      alert("Error loading applications");
+    }
+  };
+
+  const updateApplication = async (applicationId, action) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/applications/${applicationId}/${action}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
+
+      await fetchApplications(selectedProject);
+      if (action === "accept") {
+        setSelectedProject({
+          ...selectedProject,
+          status: "In Progress",
+          freelancer: data.application.freelancer,
+        });
+      }
+      fetchProjects();
+    } catch (error) {
+      console.log(error);
+      alert("Error updating application");
     }
   };
 
@@ -249,6 +313,16 @@ export default function ClientDashboard() {
                     ₹{p.budget}
                   </div>
 
+                  <button
+                    className="btn-outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      fetchApplications(p);
+                    }}
+                  >
+                    Applications
+                  </button>
+
                   <span className={statusColor(p.status)}>
                     {p.status}
                   </span>
@@ -365,6 +439,65 @@ export default function ClientDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {selectedProject && (
+        <div
+          className="modal-overlay"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div
+            className="modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2>Applications for {selectedProject.title}</h2>
+
+            {applications.length === 0 ? (
+              <p>No applications yet.</p>
+            ) : (
+              applications.map((application) => (
+                <div key={application._id} style={{ marginBottom: "18px" }}>
+                  <strong>{application.freelancer?.name}</strong>
+                  <p>{application.proposal || "No proposal provided."}</p>
+                  <p>
+                    Applied: {new Date(application.createdAt).toLocaleDateString()}
+                  </p>
+                  <p>Status: {application.status}</p>
+
+                  {application.status === "PENDING" &&
+                    selectedProject.status === "Open" && (
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button
+                          className="btn-primary"
+                          onClick={() =>
+                            updateApplication(application._id, "accept")
+                          }
+                        >
+                          Accept
+                        </button>
+                        <button
+                          className="btn-outline"
+                          onClick={() =>
+                            updateApplication(application._id, "reject")
+                          }
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    )}
+                </div>
+              ))
+            )}
+
+            <button
+              type="button"
+              className="btn-outline"
+              onClick={() => setSelectedProject(null)}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
