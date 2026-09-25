@@ -18,7 +18,12 @@ export default function MilestoneChain() {
   const fetchProject = async () => {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/projects/${projectId}`
+      `http://localhost:5000/api/projects/${projectId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
     );
 
     const data = await response.json();
