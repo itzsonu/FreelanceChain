@@ -119,7 +119,7 @@ router.post("/create", protect, allowRoles("client"), async (req, res) => {
       project,
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -131,7 +131,7 @@ router.get("/all", async (req, res) => {
 
     res.json(projects);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -171,7 +171,7 @@ router.get("/:projectId", protect, async (req, res) => {
 
     res.json(project);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -224,7 +224,7 @@ router.post(
         project,
       });
     } catch (error) {
-      res.status(500).json({ message: "Server error", error: error.message });
+      res.status(500).json({ message: "Server error" });
     }
   }
 );
@@ -285,7 +285,7 @@ router.post(
         project,
       });
     } catch (error) {
-      res.status(500).json({ message: "Server error", error: error.message });
+      res.status(500).json({ message: "Server error" });
     }
   }
 );
