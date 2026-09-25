@@ -10,6 +10,8 @@ export default function FreelancerDashboard() {
 
   const [projects, setProjects] = useState([]);
 
+  const [applications, setApplications] = useState([]);
+
   const [leaderboard] = useState([
     { name: "Arjun Sharma", score: 96, projects: 12 },
     { name: "Priya Mehra", score: 91, projects: 8 },
@@ -38,14 +40,36 @@ export default function FreelancerDashboard() {
     }
   };
 
+  const fetchApplications = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/applications/mine",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setApplications(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchProjects();
+    fetchApplications();
   }, []);
 
   const handleApply = async (projectId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/projects/apply/${projectId}`,
+        "http://localhost:5000/api/applications",
         {
           method: "POST",
 
@@ -53,7 +77,7 @@ export default function FreelancerDashboard() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-
+          body: JSON.stringify({ projectId }),
         }
       );
 
@@ -66,6 +90,7 @@ export default function FreelancerDashboard() {
 
       alert("Applied successfully");
 
+      fetchApplications();
       fetchProjects();
     } catch (error) {
       console.log(error);
@@ -188,13 +213,7 @@ export default function FreelancerDashboard() {
             <div className="stats-row">
               <div className="stat-card">
                 <div className="stat-val">
-                  {
-                    projects.filter(
-                      (p) =>
-                        p.freelancer?._id ===
-                        user.id
-                    ).length
-                  }
+                  {applications.length}
                 </div>
 
                 <div className="stat-label">
@@ -248,16 +267,18 @@ export default function FreelancerDashboard() {
 
               <div className="freelancer-grid">
                 {projects.map((p) => {
-                  const isApplied =
-                    p.freelancer?._id ===
-                    user.id;
+                  const application = applications.find(
+                    (item) => item.project?._id === p._id
+                  );
+                  const isAssigned = p.freelancer?._id === user.id;
+                  const isOpen = p.status === "Open";
 
                   return (
                     <div
                       className="project-card"
                       key={p._id}
                       onClick={() => {
-  if (p.freelancer?._id === user.id) {
+  if (isAssigned) {
     navigate(`/milestones/${p._id}`);
   }
 }}
@@ -317,19 +338,22 @@ export default function FreelancerDashboard() {
                           width: "100%",
                           marginTop: "14px",
                         }}
-                        disabled={
-                          isApplied ||
-                          p.freelancer
-                        }
+                        disabled={Boolean(application) || Boolean(p.freelancer) || !isOpen}
                         onClick={() =>
                           handleApply(p._id)
                         }
                       >
-                        {isApplied
-                          ? "Applied ✓"
+                        {isAssigned
+                          ? "Application Accepted"
+                          : application?.status === "PENDING"
+                          ? "Application Pending"
+                          : application?.status === "REJECTED"
+                          ? "Application Rejected"
                           : p.freelancer
                           ? "Assigned"
-                          : "Apply Now"}
+                          : isOpen
+                          ? "Apply Now"
+                          : p.status}
                       </button>
                     </div>
                   );
