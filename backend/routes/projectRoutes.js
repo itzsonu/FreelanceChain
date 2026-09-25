@@ -51,36 +51,6 @@ router.get("/all", async (req, res) => {
   }
 });
 
-router.post("/apply/:projectId", protect, allowRoles("freelancer"), async (req, res) => {
-  try {
-    const { projectId } = req.params;
-
-    const project = await Project.findById(projectId);
-
-    if (!project) {
-      return res.status(404).json({ message: "Project not found" });
-    }
-
-    if (project.freelancer) {
-      return res.status(400).json({
-        message: "This project already has a freelancer",
-      });
-    }
-
-    project.freelancer = req.user._id;
-    project.status = "In Progress";
-
-    await project.save();
-
-    res.json({
-      message: "Applied successfully",
-      project,
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-});
-
 router.get("/:projectId", async (req, res) => {
   try {
     const project = await Project.findById(req.params.projectId)
