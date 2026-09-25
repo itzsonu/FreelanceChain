@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/create", protect, allowRoles("client"), async (req, res) => {
   try {
-    const { title, budget, deadline, milestones, clientId } = req.body;
+    const { title, budget, deadline, milestones } = req.body;
 
     if (!title || !budget || !deadline || !milestones) {
       return res.status(400).json({ message: "All fields are required" });
@@ -27,7 +27,7 @@ router.post("/create", protect, allowRoles("client"), async (req, res) => {
       budget,
       deadline,
       milestones: milestoneArray,
-      client: clientId,
+      client: req.user._id,
     });
 
     res.status(201).json({
@@ -53,12 +53,7 @@ router.get("/all", async (req, res) => {
 
 router.post("/apply/:projectId", protect, allowRoles("freelancer"), async (req, res) => {
   try {
-    const { freelancerId } = req.body;
     const { projectId } = req.params;
-
-    if (!freelancerId) {
-      return res.status(400).json({ message: "Freelancer ID is required" });
-    }
 
     const project = await Project.findById(projectId);
 
@@ -72,7 +67,7 @@ router.post("/apply/:projectId", protect, allowRoles("freelancer"), async (req, 
       });
     }
 
-    project.freelancer = freelancerId;
+    project.freelancer = req.user._id;
     project.status = "In Progress";
 
     await project.save();

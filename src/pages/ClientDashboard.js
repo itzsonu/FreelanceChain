@@ -61,10 +61,7 @@ export default function ClientDashboard() {
   Authorization: `Bearer ${localStorage.getItem("token")}`,
 },
 
-          body: JSON.stringify({
-            ...newProject,
-            clientId: user.id,
-          }),
+          body: JSON.stringify(newProject),
         }
       );
 

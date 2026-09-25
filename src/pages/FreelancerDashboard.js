@@ -54,9 +54,6 @@ export default function FreelancerDashboard() {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
 
-          body: JSON.stringify({
-            freelancerId: user.id,
-          }),
         }
       );
 
