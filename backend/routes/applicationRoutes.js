@@ -11,13 +11,18 @@ const isValidId = (value) => mongoose.Types.ObjectId.isValid(value);
 router.post("/", protect, allowRoles("freelancer"), async (req, res) => {
   try {
     const { projectId, proposal = "" } = req.body;
+    const normalizedProposal = typeof proposal === "string" ? proposal.trim() : "";
 
     if (!projectId || !isValidId(projectId)) {
       return res.status(400).json({ message: "A valid project ID is required" });
     }
 
-    if (typeof proposal !== "string" || proposal.length > 2000) {
+    if (typeof proposal !== "string" || normalizedProposal.length > 2000) {
       return res.status(400).json({ message: "Proposal must be 2000 characters or fewer" });
+    }
+
+    if (!normalizedProposal) {
+      return res.status(400).json({ message: "Proposal is required" });
     }
 
     const project = await Project.findById(projectId).select("status freelancer");
@@ -33,7 +38,7 @@ router.post("/", protect, allowRoles("freelancer"), async (req, res) => {
     const application = await Application.create({
       project: projectId,
       freelancer: req.user._id,
-      proposal,
+      proposal: normalizedProposal,
     });
 
     res.status(201).json({
