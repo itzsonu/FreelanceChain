@@ -3,8 +3,13 @@ let connectionState = "idle";
 let recovery = null;
 let lastReadyUrl = null;
 let readyUntil = 0;
-const READY_REUSE_MS = 15000;
-const transient = response => [502, 503, 504].includes(response?.status);
+const transient = response => {
+  if ([502, 503, 504].includes(response?.status)) return true;
+  const contentType = response?.headers?.get?.("content-type");
+  // Render may serve its startup HTML with HTTP 200 while the free instance wakes.
+  // API reads expect JSON, so route that response through readiness recovery.
+  return Boolean(contentType && !/(?:application\/json|\+json)/i.test(contentType));
+};
 const unavailable = () => new Error("The connection is taking longer than expected. Please try again shortly.");
 function notify(state) { if (state === "unavailable") readyUntil = 0; if (state === connectionState) return; connectionState = state; for (const listener of listeners) listener(state); }
 export function watchServiceConnection(listener) { listeners.add(listener); listener(connectionState); return () => listeners.delete(listener); }
