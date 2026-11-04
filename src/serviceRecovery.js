@@ -3,6 +3,7 @@ let connectionState = "idle";
 let recovery = null;
 let lastReadyUrl = null;
 let readyUntil = 0;
+const READY_REUSE_MS = 15000;
 const transient = response => {
   if ([502, 503, 504].includes(response?.status)) return true;
   const contentType = response?.headers?.get?.("content-type");
